@@ -26,7 +26,7 @@ CPP	=gcc-3.4 -E -nostdinc -I../include
 
 OBJS  = sched.o system_call.o traps.o asm.o fork.o \
 	panic.o printk.o vsprintf.o sys.o exit.o \
-	signal.o mktime.o
+	signal.o mktime.o sem.o
 
 kernel.o: $(OBJS)
 	$(LD) -m elf_i386 -r -o kernel.o $(OBJS)
@@ -53,6 +53,7 @@ exit.s exit.o: exit.c ../include/errno.h ../include/signal.h \
   ../include/linux/head.h ../include/linux/fs.h ../include/linux/mm.h \
   ../include/linux/kernel.h ../include/linux/tty.h ../include/termios.h \
   ../include/asm/segment.h
+sem.s sem.o: sem.c ../include/linux/kernel.h ../include/unistd.h ../include/string.h
 fork.s fork.o: fork.c ../include/errno.h ../include/linux/sched.h \
   ../include/linux/head.h ../include/linux/fs.h ../include/sys/types.h \
   ../include/linux/mm.h ../include/signal.h ../include/linux/kernel.h \
