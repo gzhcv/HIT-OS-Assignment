@@ -129,6 +129,31 @@
 #define __NR_ssetmask	69
 #define __NR_setreuid	70
 #define __NR_setregid	71
+#define __NR_sem_open 	72
+#define __NR_sem_wait	73
+#define __NR_sem_post	74
+#define __NR_sem_unlink 75
+#define __NR_shmget     76
+#define __NR_shmat      77
+
+#define SEM_LEN 10      /* 内核维护的信号量数量上限 */
+#define STR_LEN 20      /* 信号量名字长度上限 */
+#define SEM_FAILED  (void*) 0
+
+struct task_queue_struct {
+    int front;
+    int rear;
+    struct task_struct *tasks[SEM_LEN];
+};
+typedef int key_t;
+typedef struct task_queue_struct task_queue;
+
+struct sem_struct {
+    int value;
+    char name[STR_LEN];
+    task_queue wait_queue;
+};
+typedef struct sem_struct sem_t;
 
 #define _syscall0(type,name) \
 type name(void) \

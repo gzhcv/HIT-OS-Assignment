@@ -43,4 +43,10 @@ struct ustat {
 	char f_fpack[6];
 };
 
+//struct sem_t {
+//    int value;
+//    char * name;
+//    task_struct * queue;
+//};
+
 #endif

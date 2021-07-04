@@ -429,3 +429,9 @@ void calc_mem(void)
 		}
 	}
 }
+
+void write_mem_map(unsigned long addr) {
+    addr -= LOW_MEM;
+    addr >>= 12;
+    mem_map[addr]++;
+}
