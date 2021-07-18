@@ -52,6 +52,9 @@ extern long rd_init(long mem_start, int length);
 extern long kernel_mktime(struct tm * tm);
 extern long startup_time;
 
+_syscall2(int,mkdir,const char*,name,mode_t,mode)
+_syscall3(int,mknod,const char*,filename,mode_t,mode,dev_t,dev)
+
 /*
  * This is set up by the setup-routine at boot-time
  */
@@ -113,7 +116,7 @@ void main(void)		/* This really IS void, no error here. */
 	memory_end &= 0xfffff000;
 	if (memory_end > 16*1024*1024)
 		memory_end = 16*1024*1024;
-	if (memory_end > 12*1024*1024) 
+	if (memory_end > 12*1024*1024)
 		buffer_memory_end = 4*1024*1024;
 	else if (memory_end > 6*1024*1024)
 		buffer_memory_end = 2*1024*1024;
@@ -173,6 +176,10 @@ void init(void)
 	(void) open("/dev/tty0",O_RDWR,0);
 	(void) dup(0);
 	(void) dup(0);
+	mkdir("/proc",0755);
+	mknod("/proc/psinfo",S_IFPROC|0444,0);
+	mknod("/proc/hdinfo",S_IFPROC|0444,1);
+	mknod("/proc/inodeinfo2",S_IFPROC|0444,2);
 	printf("%d buffers = %d bytes buffer space\n\r",NR_BUFFERS,
 		NR_BUFFERS*BLOCK_SIZE);
 	printf("Free mem: %d bytes\n\r",memory_end-main_memory_start);

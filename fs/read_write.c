@@ -19,6 +19,7 @@ extern int block_read(int dev, off_t * pos, char * buf, int count);
 extern int block_write(int dev, off_t * pos, char * buf, int count);
 extern int file_read(struct m_inode * inode, struct file * filp,
 		char * buf, int count);
+extern int proc_read(struct m_inode * inode, off_t * pos, char * buf, int count);
 extern int file_write(struct m_inode * inode, struct file * filp,
 		char * buf, int count);
 
@@ -75,6 +76,9 @@ int sys_read(unsigned int fd,char * buf,int count)
 		if (count<=0)
 			return 0;
 		return file_read(inode,file,buf,count);
+	}
+	if (S_ISPROC(inode->i_mode)) {
+		return proc_read(inode,&file->f_pos,buf,count);
 	}
 	printk("(Read)inode->i_mode=%06o\n\r",inode->i_mode);
 	return -EINVAL;

@@ -12,7 +12,7 @@
 #include <linux/kernel.h>
 #include <asm/segment.h>
 
-#include <string.h> 
+#include <string.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <const.h>
@@ -416,7 +416,7 @@ int sys_mknod(const char * filename, int mode, int dev)
 	struct m_inode * dir, * inode;
 	struct buffer_head * bh;
 	struct dir_entry * de;
-	
+
 	if (!suser())
 		return -EPERM;
 	if (!(dir = dir_namei(filename,&namelen,&basename)))
@@ -441,7 +441,7 @@ int sys_mknod(const char * filename, int mode, int dev)
 		return -ENOSPC;
 	}
 	inode->i_mode = mode;
-	if (S_ISBLK(mode) || S_ISCHR(mode))
+	if (S_ISBLK(mode) || S_ISCHR(mode) || S_ISPROC(mode))
 		inode->i_zone[0] = dev;
 	inode->i_mtime = inode->i_atime = CURRENT_TIME;
 	inode->i_dirt = 1;
@@ -554,7 +554,7 @@ static int empty_dir(struct m_inode * inode)
 		return 0;
 	}
 	de = (struct dir_entry *) bh->b_data;
-	if (de[0].inode != inode->i_num || !de[1].inode || 
+	if (de[0].inode != inode->i_num || !de[1].inode ||
 	    strcmp(".",de[0].name) || strcmp("..",de[1].name)) {
 	    	printk("warning - bad directory on dev %04x\n",inode->i_dev);
 		return 0;
